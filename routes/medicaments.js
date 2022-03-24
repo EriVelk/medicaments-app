@@ -9,15 +9,15 @@ const { getAllMedicaments,
 const router = require("express").Router();
 
 //Get all
-router.get("/", verifyTokenAndAuthorization, getAllMedicaments)
+router.get("/", verifyTokenAndAdmin, getAllMedicaments)
 
 //Create medicament
 router.post("/create", verifyTokenAndAdmin ,createMedicament);
 
 //Delete medicament
-router.delete("/delete/:id", deleteMedicament);
+router.delete("/delete/:id", verifyTokenAndAdmin, deleteMedicament);
 
 //Update medicament
-router.put("/update/:id", updateMedicament);
+router.put("/update/:id", verifyTokenAndAdmin, updateMedicament);
 
 module.exports = router;

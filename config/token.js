@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) =>{
 
 const verifyTokenAndAuthorization = (req, res, next) =>{
     verifyToken(req, res, ()=>{
-        if(req.user.id === req.params.id || !req.user.isadmin){
+        if(req.user.id === req.params.id || req.user.isadmin){
             next();
         }else{
             res.status(403).json("No tienes permisos tan altos.");
