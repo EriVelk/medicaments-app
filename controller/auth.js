@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 const authController = {
     authControllerRegister: async (req, res) => {
         const email = req.body.email;
-        const exist = Doctor.findOne({email:email});
+        const exist = await Doctor.findOne({email:email});
+
+        console.log(exist)
 
         if(exist){
             res.status(403).json({"message":"El correo ya esta registrado."})
