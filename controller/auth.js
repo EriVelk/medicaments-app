@@ -4,19 +4,26 @@ const jwt = require('jsonwebtoken');
 
 const authController = {
     authControllerRegister: async (req, res) => {
-        const newDoctor = new Doctor({
-            name: req.body.name,
-            surname: req.body.surname,
-            secondsurname: req.body.secondsurname,
-            email: req.body.email,
-            password: cryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
-        })
+        const email = req.body.email;
+        const exist = Doctor.findOne({email:email});
 
-        try {
-            const savedDoctor = await newDoctor.save();
-            res.status(201).json(savedDoctor);
-        } catch (error) {
-            res.status(500).json("Error:::: ", error);
+        if(exist){
+            res.status(403).json({"message":"El correo ya esta registrado."})
+        }else{
+            const newDoctor = new Doctor({
+                name: req.body.name,
+                surname: req.body.surname,
+                secondsurname: req.body.secondsurname,
+                email: email,
+                password: cryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
+            })
+    
+            try {
+                const savedDoctor = await newDoctor.save();
+                res.status(201).json(savedDoctor);
+            } catch (error) {
+                res.status(500).json("Error:::: ", error);
+            }
         }
     },
     
