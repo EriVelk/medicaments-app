@@ -43,47 +43,54 @@ const authController = {
         }
     ],
 
-    authControllerLogin: async (req, res) => {
-        try {
-            const doctor = await Doctor.findOne({
-                email: req.body.email
-            })
+    authControllerLogin: [
 
-            !doctor && res.status(401).json({ "message": "Wrong credentials" });
+        body('password').trim().not().isEmpty().escape(),
+        check('email').trim().isEmail().normalizeEmail().escape().withMessage('Invalid Email'),
 
-            const hashedPassword = cryptoJS.AES.decrypt(
-                doctor.password,
-                process.env.PASS_SEC
-            )
+        async (req, res) => {
+            try {
+                const doctor = await Doctor.findOne({
+                    email: req.body.email
+                })
 
-            const originalPassword = hashedPassword.toString(cryptoJS.enc.Utf8);
+                !doctor && res.status(401).json({ "message": "Wrong credentials" });
 
-            originalPassword !== req.body.password && res.status(401).json({ "message": "Wrong credentials" });
+                const hashedPassword = cryptoJS.AES.decrypt(
+                    doctor.password,
+                    process.env.PASS_SEC
+                )
 
-            const accessToken = jwt.sign(
-                {
-                    id: doctor._id,
-                    isadmin: doctor.isadmin
-                },
-                process.env.JWT_SEC,
-                {
-                    expiresIn: "3d"
-                }
-            )
+                const originalPassword = hashedPassword.toString(cryptoJS.enc.Utf8);
 
-            const { password, ...others } = doctor._doc;
+                originalPassword !== req.body.password && res.status(401).json({ "message": "Wrong credentials" });
 
-            res.status(200).cookie('access_token', 'Bearer ' + accessToken, {
-                expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
-            }).json({ ...others, accessToken })
+                const accessToken = jwt.sign(
+                    {
+                        id: doctor._id,
+                        isadmin: doctor.isadmin
+                    },
+                    process.env.JWT_SEC,
+                    {
+                        expiresIn: "3d"
+                    }
+                )
 
-        } catch (error) {
+                const { password, ...others } = doctor._doc;
 
-            res.status(500).json(error);
-            console.log(error);
+                res.status(200).cookie('access_token', 'Bearer ' + accessToken, {
+                    expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
+                }).json({ ...others, accessToken })
 
+            } catch (error) {
+
+                res.status(500).json(error);
+                console.log(error);
+
+            }
         }
-    },
+
+    ],
 
     getAllUsers: async (req, res) => {
         try {
