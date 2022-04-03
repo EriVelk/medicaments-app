@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) =>{
-    const authCookie = req.cookies.access_token;
-    if(authCookie){
-        const token = authCookie.split(" ")[1];
+    const authHeader = req.headers.token;
+    if(authHeader){
+        const token = authHeader.split(" ")[1];
         jwt.verify(token, process.env.JWT_SEC, (err, user) =>{
             if(err){
                 res.status(403).json("El token no es valido.")
@@ -31,7 +31,7 @@ const verifyTokenAndAdmin = (req,res,next) =>{
         if(req.user.isadmin){
             next();
         }else{
-            res.status(403).json("You are not alowed to do that.");
+            res.status(403).json({message:"No eres Admin."});
         }
     })
 }

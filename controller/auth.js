@@ -78,9 +78,7 @@ const authController = {
 
                 const { password, ...others } = doctor._doc;
 
-                res.status(200).cookie('access_token', 'Bearer ' + accessToken, {
-                    expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
-                }).json({ ...others, accessToken })
+                res.status(200).json({ ...others, accessToken })
 
             } catch (error) {
 
