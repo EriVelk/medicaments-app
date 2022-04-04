@@ -1,24 +1,47 @@
 const Pacient = require('../models/Pacient');
 const cryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const { body, validationResult, check } = require('express-validator')
 
 const pacientController = {
-    pacientRegister: async (req, res) => {
-        const newPacient = new Pacient({
-            name: req.body.name,
-            surname: req.body.surname,
-            secondsurname: req.body.secondsurname,
-            email: req.body.email,
-            password: cryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
-        })
+    pacientRegister: [
+        body('name').trim().isLength({ min: 3 }).escape(),
+        body('surname').trim().isLength({ min: 3 }).escape(),
+        body('secondsurname').trim().isLength({ min: 3 }).escape(),
+        body('password').trim().not().isEmpty().escape(),
+        check('email').trim().isEmail().normalizeEmail().escape().withMessage('Invalid Email').custom(async(email) => {
+            const emailPacient = await Pacient.findOne({ email: email });
+            if (emailPacient) {
+                throw new Error('Email al ready in use.');
+            }
+        }),
 
-        try {
-            const savedPacient = await newPacient.save();
-            res.status(201).json(savedPacient);
-        } catch (error) {
-            res.status(500).json("Error:::::::", error);
+        async (req, res) => {
+
+            const errors = validationResult(req);
+
+            if (errors.isEmpty()) {
+                const email = req.body.email;
+                const newPacient = new Pacient({
+                    name: req.body.name,
+                    surname: req.body.surname,
+                    secondsurname: req.body.secondsurname,
+                    email: email,
+                    password: cryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
+                })
+
+                try {
+                    const savedPacient = await newPacient.save();
+                    res.status(201).json(savedPacient);
+                } catch (error) {
+                    res.status(500).json("Error:::: ", error);
+                }
+                
+            }else{
+                res.status(403).json({errors: errors.array()});
+            }
         }
-    },
+    ],
 
     pacientLogin: async (req, res) => {
         try {
