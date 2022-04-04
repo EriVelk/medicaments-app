@@ -12,7 +12,7 @@ const {
 router.post("/create", createTime);
 
 //Get time by User for Pacient
-router.get("/times/pacient", verifyTokenAndAuthorization,getTimesForPacient)
+router.get("/times/pacient",getTimesForPacient)
 
 
 module.exports = router;
