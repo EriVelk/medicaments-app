@@ -12,7 +12,7 @@ const router = require("express").Router();
 router.get("/", verifyTokenAndAdmin, getAllMedicaments)
 
 //Create medicament
-router.post("/create", verifyTokenAndAdmin ,createMedicament);
+router.post("/create" ,createMedicament);
 
 //Delete medicament
 router.delete("/delete/:id", verifyTokenAndAdmin, deleteMedicament);
