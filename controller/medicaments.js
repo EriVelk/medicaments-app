@@ -16,7 +16,7 @@ medicamentController.createMedicament = [
                 name:req.body.name,
                 description:req.body.description,
                 size: req.body.size,
-                user: req.user.id
+                user: req.body.user
             })
     
             try {
