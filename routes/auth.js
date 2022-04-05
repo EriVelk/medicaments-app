@@ -3,7 +3,8 @@ const router = require("express").Router();
 const {
     authControllerRegister, 
     authControllerLogin,
-    getAllUsers
+    getAllUsers,
+    getPacients
 } = require('../controller/auth');
 
 
@@ -15,5 +16,8 @@ router.post("/login", authControllerLogin);
 
 //Get all doctors
 router.get("/all", getAllUsers);
+
+//Get Pacients by Doctor
+router.get("/pacients/:user", getPacients);
 
 module.exports = router;

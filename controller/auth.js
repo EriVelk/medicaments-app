@@ -1,6 +1,7 @@
 const Doctor = require('../models/Doctor');
 const cryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const Pacient = require('../models/Pacient');
 const { body, validationResult, check } = require('express-validator')
 
 const authController = {
@@ -92,9 +93,20 @@ const authController = {
 
     getAllUsers: async (req, res) => {
         try {
-            const doctors = await Doctor.find().populate({ path: "listPacient", model: "Pacient" });
+            const doctors = await Doctor.find();
             res.status(200).json(doctors);
         } catch (error) {
+            res.status(500).json(error);
+            console.log(error)
+        }
+    },
+
+    getPacients: async(req, res) => {
+        try{
+            const pacients = await Pacient.find({user:req.params.user})
+            .populate({ path: "listpresciption", model: "Perscription" });
+            res.status(200).json(pacients);
+        }catch(erro){
             res.status(500).json(error);
             console.log(error)
         }
