@@ -14,7 +14,13 @@ const TimetableSchema = new Schema({
     medicament:{
         type:Schema.Types.ObjectId,
         ref:'Medicament'
+    },
+    prescription:{
+        type:Schema.Types.ObjectId,
+        ref:'Perscription' 
     }
+},{
+    timestamps: true
 });
 
 module.exports = model('Timetable', TimetableSchema)

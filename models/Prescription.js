@@ -9,6 +9,21 @@ const PrescriptionSchema = new Schema({
         type:Number,
         default: 0
     },
+    age:{
+        type:Number,
+        default: 0 
+    },
+    temp:{
+        type:String,
+    },
+    isactive:{
+        type: Boolean,
+        default: true
+    },
+    user:{
+        type: Schema.Types.ObjectId,
+        ref:'Doctor'
+    },
     listmedicament:[
         {
             type: Schema.Types.ObjectId,
@@ -16,6 +31,8 @@ const PrescriptionSchema = new Schema({
         }
     ]
 
+},{
+    timestamps: true
 })
 
 module.exports = model('Perscription', PrescriptionSchema);

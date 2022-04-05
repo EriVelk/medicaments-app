@@ -6,7 +6,8 @@ timetableController.createTime = async (req, res) => {
         datestart: req.body.datestart,
         dateend: req.body.dateend,
         user: req.body.user,
-        medicament: req.body.medicament
+        medicament: req.body.medicament,
+        prescription: req.body.prescription
     })
 
     try {
@@ -18,11 +19,11 @@ timetableController.createTime = async (req, res) => {
 }
 
 timetableController.getTimesForPacient = async (req, res) => {
-    console.log(req.user.id)
     try {
-        const times = await Timetable.find({ user: req.user.id })
+        const times = await Timetable.find({ user: req.params.id})
             .populate({ path: "user", model: "Pacient" })
             .populate({ path: "medicament", model: "Medicament" })
+            .populate({ path: "prescription", model: "Perscription"})
         res.status(200).json(times);
     } catch (error) {
         res.status(401).json(error);
