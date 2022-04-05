@@ -24,6 +24,10 @@ const PrescriptionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:'Doctor'
     },
+    pacient:{
+        type: Schema.Types.ObjectId,
+        ref:'Pacient'
+    },
     listmedicament:[
         {
             type: Schema.Types.ObjectId,

@@ -104,7 +104,7 @@ const authController = {
     getPacients: async(req, res) => {
         try{
             const pacients = await Pacient.find({user:req.params.user})
-            .populate({ path: "listpresciption", model: "Perscription" });
+            //.populate({ path: "listpresciption", model: "Perscription" });
             res.status(200).json(pacients);
         }catch(erro){
             res.status(500).json(error);

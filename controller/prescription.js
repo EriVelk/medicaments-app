@@ -20,6 +20,7 @@ prescriptionController.createPrescription = [
                 age: req.body.age,
                 temp: req.body.age,
                 user: req.body.user,
+                pacient:req.body.pacient,
                 listmedicament: req.body.listmedicament
             })
         
