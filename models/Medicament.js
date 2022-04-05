@@ -16,7 +16,7 @@ const MedicamentSchema = new Schema({
     },
     user:{
         type: Schema.Types.ObjectId,
-        ref:'User'
+        ref:'Doctor'
     }
 },{
     timestamps : true

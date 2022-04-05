@@ -21,12 +21,12 @@ const pacientController = {
             const errors = validationResult(req);
 
             if (errors.isEmpty()) {
-                const email = req.body.email;
                 const newPacient = new Pacient({
                     name: req.body.name,
                     surname: req.body.surname,
                     secondsurname: req.body.secondsurname,
-                    email: email,
+                    email: req.body.email,
+                    user: req.body.user,
                     password: cryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
                 })
 
@@ -83,6 +83,19 @@ const pacientController = {
             console.log(error);
 
         }
+    },
+    getAllPacients: async(req, res) =>{
+        const pacients = await Pacient.find({user:req.params.id}).populate({path:"user", model:"Doctor", match:{ isactive : true }})
+        if(pacients.length > 0){
+            try {
+                res.status(200).json(pacients);
+            } catch (error) {
+                res.status(401).json(error);
+            }
+        }else{
+            res.status(404).json({"message":"Doctor no tiene pacientes."});
+        }
+        
     }
 }
 

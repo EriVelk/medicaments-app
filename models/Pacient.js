@@ -23,6 +23,10 @@ const PacientSchema = new Schema(
             type:String,
             required: true
         },
+        user:{
+            type: Schema.Types.ObjectId,
+            ref:'Doctor'
+        },
         listpresciption:[
             {
                 type: Schema.Types.ObjectId,
