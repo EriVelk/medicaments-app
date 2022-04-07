@@ -7,7 +7,7 @@ const TimetableSchema = new Schema({
     dateend:{
         type: Date
     },
-    user:{
+    pacient:{
         type:Schema.Types.ObjectId,
         ref:'Pacient'
     },
