@@ -45,48 +45,60 @@ const authController = {
     ],
 
     authControllerLogin: [
+        check('email').trim().isEmail().normalizeEmail().escape().withMessage('Invalid Email').custom(async(email) => {
+            const emailBody = await Doctor.findOne({ email: email });
+            if (!emailBody) {
+                throw new Error('Wrong credentials.');
+            }
+        }),
+        body('password').trim().not().isEmpty().escape().custom(async(password, {req}) => {
+            const user = await Doctor.findOne({ email: req.body.email });
+            const hashedPassword = cryptoJS.AES.decrypt(
+                user.password,
+                process.env.PASS_SEC
+            )
 
-        body('password').trim().not().isEmpty().escape(),
-        check('email').trim().isEmail().normalizeEmail().escape().withMessage('Invalid Email'),
+            const originalPassword = hashedPassword.toString(cryptoJS.enc.Utf8);
+
+            if(originalPassword !== password) {
+                throw new Error('Wrong credentials.');
+            }
+        }),
 
         async (req, res) => {
-            try {
-                const doctor = await Doctor.findOne({
-                    email: req.body.email
-                })
+            const errors = validationResult(req);
 
-                !doctor && res.status(401).json({ "message": "Wrong credentials" });
-
-                const hashedPassword = cryptoJS.AES.decrypt(
-                    doctor.password,
-                    process.env.PASS_SEC
-                )
-
-                const originalPassword = hashedPassword.toString(cryptoJS.enc.Utf8);
-
-                originalPassword !== req.body.password && res.status(401).json({ "message": "Wrong credentials" });
-
-                const accessToken = jwt.sign(
-                    {
-                        id: doctor._id,
-                        isadmin: doctor.isadmin
-                    },
-                    process.env.JWT_SEC,
-                    {
-                        expiresIn: "3d"
-                    }
-                )
-
-                const { password, ...others } = doctor._doc;
-
-                res.status(200).json({ ...others, accessToken })
-
-            } catch (error) {
-
-                res.status(500).json(error);
-                console.log(error);
-
+            if(errors.isEmpty()){
+                try {
+                    const doctor = await Doctor.findOne({
+                        email: req.body.email
+                    })
+    
+                    const accessToken = jwt.sign(
+                        {
+                            id: doctor._id,
+                            isadmin: doctor.isadmin
+                        },
+                        process.env.JWT_SEC,
+                        {
+                            expiresIn: "3d"
+                        }
+                    )
+    
+                    const { password, ...others } = doctor._doc;
+    
+                    res.status(200).json({ ...others, accessToken })
+    
+                } catch (error) {
+    
+                    res.status(500).json({"error":error.message});
+                    console.log(error);
+    
+                }
+            }else{
+                res.status(403).json({errors: errors.array()});
             }
+            
         }
 
     ],
