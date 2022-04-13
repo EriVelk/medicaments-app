@@ -63,4 +63,19 @@ prescriptionController.getPrescription = async(req, res) =>{
         res.status(200).json(prescription);
 }
 
+prescriptionController.getPrescriptionsByDoctor = async(req, res) =>{
+    const prescriptions = await Prescription.find({
+        user: req.params.user
+    }).populate({ path: "pacient", model: "Pacient" })    
+    try {
+        res.status(200).json(prescriptions);
+    } catch (error) {
+        res.status(500).json({
+            error : {
+                message : error.message
+           }
+        });
+    }
+}
+
 module.exports = prescriptionController;

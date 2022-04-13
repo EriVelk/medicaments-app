@@ -4,7 +4,7 @@ const { verifyTokenAndAuthorization,
     verifyTokenAndAdmin } = require("../config/token");
 
 const {
-    createPrescription, addMedicament, getPrescription
+    createPrescription, addMedicament, getPrescription, getPrescriptionsByDoctor
 } = require('../controller/prescription');
 
 
@@ -16,6 +16,9 @@ router.put("/update/:id", addMedicament);
 
 //Add medicaments
 router.get("/:id", getPrescription);
+
+//Get Prescripttion by doctor
+router.get("/all/:user", getPrescriptionsByDoctor);
 
 
 module.exports = router;
