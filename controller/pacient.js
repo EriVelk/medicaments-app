@@ -96,6 +96,18 @@ const pacientController = {
             res.status(404).json({"message":"Doctor no tiene pacientes."});
         }
         
+    },
+    getPacientById: async(req, res) => {
+        const pacient = await Pacient.findById(req.params.id);
+        if(pacient){
+            try {
+                res.status(200).json(pacient);
+            } catch (error) {
+                res.status(401).json(error);
+            }
+        }else{
+            res.status(404).json({"message":"No existe el paciente."});
+        }
     }
 }
 

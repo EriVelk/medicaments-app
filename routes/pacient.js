@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const {
-    pacientRegister, pacientLogin, getAllPacients
+    pacientRegister, pacientLogin, getAllPacients, getPacientById
 } = require('../controller/pacient');
 
 
@@ -13,6 +13,9 @@ router.post("/login", pacientLogin)
 
 //Get all
 router.get("/pacients/:id", getAllPacients);
+
+//Get pacient
+router.get("/:id", getPacientById);
 
 
 module.exports = router;
