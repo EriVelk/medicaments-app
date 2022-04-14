@@ -98,7 +98,7 @@ const pacientController = {
         
     },
     getPacientById: async(req, res) => {
-        const pacient = await Pacient.findById(req.params.id);
+        const pacient = await Pacient.findById(req.params.id).populate({path:"user", model:"Doctor"});
         if(pacient){
             try {
                 res.status(200).json(pacient);
