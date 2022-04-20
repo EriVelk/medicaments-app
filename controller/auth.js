@@ -96,7 +96,7 @@ const authController = {
     
                 }
             }else{
-                res.status(403).json({errors: errors.array()});
+                res.status(403).json({"errors": errors.array()});
             }
             
         }

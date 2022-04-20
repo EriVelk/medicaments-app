@@ -43,12 +43,21 @@ prescriptionController.createPrescription = [
 prescriptionController.addMedicament = async(req, res) => {
     const prescription = await Prescription.findOne({_id:req.params.id});
     const list = req.body.list;
-    if(prescription){
-        await Prescription.updateOne({_id:req.params.id},{
-            $push:{listmedicament:list}
-        })
-    }else{
-        res.status(403).json({message:"Not found"});
+    
+    try {
+        if(prescription){
+            await Prescription.updateOne({_id:req.params.id},{
+                $push:{listmedicament:list}
+            })
+        }else{
+            res.status(403).json({message:"Not found"});
+        }
+    } catch (error) {
+        res.status(500).json({
+            error : {
+                message : error.message
+           }
+        });
     }
 
     const newPrescription = await Prescription.findOne({_id:req.params.id});
