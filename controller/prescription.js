@@ -66,7 +66,7 @@ prescriptionController.addMedicament = async(req, res) => {
 
 prescriptionController.getPrescription = async(req, res) =>{
     const prescription = await Prescription.findOne({_id:req.params.id})
-        .populate({ path: "user", model: "Doctor" })
+        .populate({ path: "pacient", model: "Pacient" })
         .populate({ path: "listmedicament", model: "Medicament" })
 
         res.status(200).json(prescription);
