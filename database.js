@@ -5,7 +5,7 @@ dotenv.config();
 
 const dev_db_url = 'mongodb://localhost/medicament';
 
-mongoose.connect(process.env.MONGO_URL || dev_db_url, {
+mongoose.connect(process.env.MONGOX_URL || dev_db_url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(db => {
